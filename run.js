@@ -5,12 +5,12 @@
  * Date-Time: 18/06/2019-21:51
  */
 
+const fs = require("fs");
 const https = require("https");
 const nodeSchedule = require('node-schedule');
 const winston = require('winston');
 
 const Cookie = `tracking_id=955fc5c286344abf8b69526d7bf6b1d0; browserid=8b4f7eac60bff5c10715c149ff32d94d; __utmz=147100981.1560079024.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _gcl_au=1.1.1222511145.1560079024; cto_lwid=d3a8769e-51d0-4e5c-991b-86e0f6b7d5f9; _ga=GA1.2.2042790980.1560079024; _fbp=fb.1.1560079025407.1101395990; s_c_id_type=fosp; login_type=fosp; _ga=GA1.3.2042790980.1560079024; __stdf=0; mp_7ee9ac5438d5ed68c57319eb6bf3821f_mixpanel=%7B%22distinct_id%22%3A%20%2216b55dd3ec9249-010a5d62d5b0df-3f72045a-100200-16b55dd3eca529%22%2C%22%24device_id%22%3A%20%2216b55dd3ec9249-010a5d62d5b0df-3f72045a-100200-16b55dd3eca529%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fwww.sendo.vn%2Fnoi-dien-mini-sieu-toc-16cm-9780102.html%2F%22%2C%22%24initial_referring_domain%22%3A%20%22www.sendo.vn%22%7D; access_token=L9rjjfA%2BO8r%2FB2tKKPeUqCGIkJvQ2MLeAX6X9IU%2Bh7%2FQMraMXO0OTDI6q5KQuiQpMtRil3VLiLQ5YQ7hNIiaXx1KNF28cOuwoqcZMzHHuL8vjqCwejE4AqRy7wRvi3fSc8ZXOaEJ3ELzwhICbDWxtD8ECFa2%2FYu747hLzntseTc%3D; s_c_id_status=return; __stp={"visit":"returning","uuid":"4182cbe5-7b56-4f08-80e7-791e9b2c99a3","ck":"2028040157"}; SSID=3dpk3q2lh9aa3fvvd47gofcn94; __utma=147100981.2042790980.1560079024.1560771597.1560868721.7; __utmc=147100981; _gid=GA1.2.497193889.1560868722; closed_banner=1; __utmt=1; _dc_gtm_UA-32891946-6=1; _gat_UA-32891946-6=1; __utmb=147100981.10.7.1560869352932; _gid=GA1.3.497193889.1560868722; __sts={"sid":1560869354601,"tx":1560869354601,"url":"https%3A%2F%2Fcheckout.sendo.vn%2F%3Fproduct%3Df7d297e36834ca67203d25304afd4adf%26sendo_platform%3Ddesktop2%26shop%3D499867","pet":1560869354601,"set":1560869354601}; __stgeo="0"; __stbpnenable=1`;
-
 
 
 /*** config winston **/
@@ -34,7 +34,9 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 	let mainInterval = null;
 
 	const relativePlan = new Date(plan - (0.5 * 60 * 1000));
+	console.log('time', relativePlan);
 	const job = nodeSchedule.scheduleJob(relativePlan, function () {
+		console.log('start hunt');
 		const relativeTime = 0.2 * 1000;
 		const myInterval = setInterval(function () {
 			const now = new Date().getTime();
@@ -46,7 +48,6 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 					if (current_number_request < TOTAL_REQUEST && !is_bought_success) {
 						getInfo(current_product_hash, currentShopId);
 						current_number_request++;
-						clearInterval(mainInterval);
 					}
 				}, 37);
 			}
@@ -128,7 +129,9 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 		return new Promise((resolve, reject) => {
 			const options = {
 				method: 'POST',
-				headers
+				headers,
+				key: fs.readFileSync('./https/key.pem'),
+				cert: fs.readFileSync('./https/cert.pem')
 			};
 			const req = https.request(url, options, (response) => {
 				let data = '';
@@ -154,4 +157,4 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 }
 
 
-saleHunter('98f5c749628bcfa5b9e4f77d6da68d97', 391129, new Date(2019, 5, 20, 21, 51).getTime());
+saleHunter('', 0, new Date(2019, 5, 20, 23, 25).getTime());
