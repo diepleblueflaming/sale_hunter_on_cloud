@@ -28,14 +28,14 @@ const headers = {
 
 
 function saleHunter(current_product_hash, currentShopId, plan) {
-	const TOTAL_REQUEST = 60;
+	const TOTAL_REQUEST = 20;
 	let current_number_request = 0;
 	let is_bought_success = false;
 	let mainInterval = null;
 
 	const relativePlan = new Date(plan - (0.5 * 60 * 1000));
 	const job = nodeSchedule.scheduleJob(relativePlan, function () {
-		const relativeTime = 0.25 * 1000;
+		const relativeTime = 0.2 * 1000;
 		const myInterval = setInterval(function () {
 			const now = new Date().getTime();
 			if ((plan - now) < relativeTime) {
@@ -67,7 +67,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 
 		post(url, body, headers).
 		then((res) => {
-			if (typeof res.data.products_checkout.products[0].promotion !== 'undefined') {
+			if (typeof res.data !== 'undefined' && typeof res.data.products_checkout.products[0].promotion !== 'undefined') {
 				buy(res.data, product_hash, shopId);
 			}
 		});
@@ -136,6 +136,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 					data += chunk;
 				});
 				response.on('end', () => {
+					logger.info(`${url}: ${response.statusCode}`);
 					if (response.statusCode === 200) {
 						data = JSON.parse(data);
 						return resolve(data);
@@ -153,4 +154,4 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 }
 
 
-saleHunter('26341bdf376a26c2ea6c112db7727caa', 398035, new Date(2019, 5, 20, 19, 51).getTime());
+saleHunter('98f5c749628bcfa5b9e4f77d6da68d97', 391129, new Date(2019, 5, 20, 21, 51).getTime());
