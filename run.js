@@ -153,4 +153,4 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 }
 
 
-saleHunter('445d301d0d868a538213b6406cd38bb7', 276722, new Date(2019, 5, 20, 19).getTime());
+saleHunter('26341bdf376a26c2ea6c112db7727caa', 398035, new Date(2019, 5, 20, 19, 51).getTime());
