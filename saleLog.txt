@@ -1,0 +1,2 @@
+{"message":"*******************************************","level":"info"}
+{"message":"Start hunter: Thu, 20 Jun 2019 11:59:59 GMT","level":"info"}
