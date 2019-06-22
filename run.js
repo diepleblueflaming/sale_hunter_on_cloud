@@ -4,8 +4,6 @@
  * Author: Le Hai Diep(dieple)
  * Date-Time: 18/06/2019-21:51
  */
-
-const fs = require("fs");
 const https = require("https");
 const nodeSchedule = require('node-schedule');
 const winston = require('winston');
@@ -32,12 +30,11 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 	let current_number_request = 0;
 	let is_bought_success = false;
 	let mainInterval = null;
+	let saveOrderData = null;
 
-	const relativePlan = new Date(plan - (0.5 * 60 * 1000));
-	console.log('time', relativePlan);
+	const relativePlan = new Date(plan - 5000);
 	const job = nodeSchedule.scheduleJob(relativePlan, function () {
-		console.log('start hunt');
-		const relativeTime = 0.2 * 1000;
+		const relativeTime = 0.1 * 1000;
 		const myInterval = setInterval(function () {
 			const now = new Date().getTime();
 			if ((plan - now) < relativeTime) {
@@ -46,19 +43,25 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 				logger.info(`Start hunter: ` + new Date().toUTCString());
 				mainInterval = setInterval(function () {
 					if (current_number_request < TOTAL_REQUEST && !is_bought_success) {
-						getInfo(current_product_hash, currentShopId);
+						if (saveOrderData) {
+							buy();
+						} else {
+							getInfo();
+						}
 						current_number_request++;
+					} else {
+						clearInterval(mainInterval);
 					}
-				}, 37);
+				}, 33);
 			}
 		}, 50);
 	});
 
-	function getInfo(product_hash, shopId) {
+	function getInfo() {
 		const url = 'https://checkout.sendo.vn/api/checkout/info';
 		const body = JSON.stringify({
-			"shop_id": Number(shopId),
-			"item_hash": String(product_hash),
+			"shop_id": Number(currentShopId),
+			"item_hash": String(current_product_hash),
 			"sendo_platform": "desktop2",
 			"current_voucher": {"enable_suggest_voucher": true},
 			"enable_tracking": true,
@@ -69,48 +72,55 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 		post(url, body, headers).
 		then((res) => {
 			if (typeof res.data !== 'undefined' && typeof res.data.products_checkout.products[0].promotion !== 'undefined') {
-				buy(res.data, product_hash, shopId);
+				buy(res.data);
 			}
+		}).catch((error) => {
+			// logger.error(`${url} failed with reason: ${error.message}`);
 		});
 	}
 
 
-	function buy(res, product_hash, shopId) {
-		let body = {
-			"shop_id": Number(shopId),
-			"item_hash": product_hash,
-			"current_products": null,
-			"current_address_id": null,
-			"current_carrier": null,
-			"current_payment_method": {
-				"method": "cod_payment"
-			},
-			"current_voucher": {
-				"voucher_code": "",
-				"voucher_value": 0,
-				"is_shop_voucher": false,
-				"voucher_campaign_code": "",
-				"sub_total": 0,
-				"payment_method": "",
-				"error": "",
-				"is_enable_captcha": false,
-				"captcha_response": "",
-				"enable_suggest_voucher": true,
-				"tracking_order_source": 0,
-				"suggested_message": "",
-				"redeemed_at": 0
-			},
-			"sendo_platform": "desktop2",
-			"ignore_invalid_product": -1,
-			"product_hashes": [product_hash],
-			"version": 2.1
-		};
+	function buy(res) {
+		let body = null;
+		if (!saveOrderData) {
+			body = {
+				"shop_id": Number(currentShopId),
+				"item_hash": current_product_hash,
+				"current_products": null,
+				"current_address_id": null,
+				"current_carrier": null,
+				"current_payment_method": {
+					"method": "cod_payment"
+				},
+				"current_voucher": {
+					"voucher_code": "",
+					"voucher_value": 0,
+					"is_shop_voucher": false,
+					"voucher_campaign_code": "",
+					"sub_total": 0,
+					"payment_method": "",
+					"error": "",
+					"is_enable_captcha": false,
+					"captcha_response": "",
+					"enable_suggest_voucher": true,
+					"tracking_order_source": 0,
+					"suggested_message": "",
+					"redeemed_at": 0
+				},
+				"sendo_platform": "desktop2",
+				"ignore_invalid_product": -1,
+				"product_hashes": [current_product_hash],
+				"version": 2.1
+			};
 
-		body.current_products = res.products_checkout.products;
-		body.current_address_id = res.customer_data.current_address_id;
-		body.current_carrier = res.shipping_info.current_carrier;
-
-		body = JSON.stringify(body);
+			body.current_products = res.products_checkout.products;
+			body.current_address_id = res.customer_data.current_address_id;
+			body.current_carrier = res.shipping_info.current_carrier;
+			body = JSON.stringify(body);
+			saveOrderData = body;
+		} else {
+			body = saveOrderData;
+		}
 
 		const url = 'https://checkout.sendo.vn/api/checkout/save-order';
 		post(url, body, headers).
@@ -118,9 +128,12 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 			if (data.increment_id !== undefined && data.payment_type !== undefined) {
 				is_bought_success = true;
 				clearInterval(mainInterval);
-				return logger.info(`Hunter Success: ` + new Date().toUTCString());
+				const now = new Date();
+				return logger.info(`Hunter Success: ${now.getMinutes()} ${now.getMilliseconds()}`);
 			}
 			logger.info(`Hunter Failure: ` + new Date().toUTCString());
+		}).catch((error) => {
+			// logger.error(`${url} failed with reason: ${error.message}`);
 		});
 	}
 
@@ -138,7 +151,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 					data += chunk;
 				});
 				response.on('end', () => {
-					logger.info(`${url}: ${response.statusCode}`);
+					// logger.info(`${url}: ${response.statusCode}`);
 					if (response.statusCode === 200) {
 						data = JSON.parse(data);
 						return resolve(data);
@@ -155,5 +168,4 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 	}
 }
 
-
-saleHunter('e9ededa578a8080c148712ad28e7218f', 591757, new Date(2019, 5, 22, 10, 22).getTime());
+saleHunter('e57ba6143a3ba1df589f9e84c30613c4', 580180, new Date(2019, 5, 22, 16, 51).getTime());
