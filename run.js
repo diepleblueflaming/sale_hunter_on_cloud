@@ -130,8 +130,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 			const options = {
 				method: 'POST',
 				headers,
-				key: fs.readFileSync('./https/key.pem'),
-				cert: fs.readFileSync('./https/cert.pem')
+				rejectUnauthorized: false
 			};
 			const req = https.request(url, options, (response) => {
 				let data = '';
@@ -157,4 +156,4 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 }
 
 
-saleHunter('', 0, new Date(2019, 5, 20, 23, 25).getTime());
+saleHunter('e9ededa578a8080c148712ad28e7218f', 591757, new Date(2019, 5, 22, 10, 22).getTime());
