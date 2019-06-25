@@ -8,7 +8,7 @@ const https = require("https");
 const nodeSchedule = require('node-schedule');
 const winston = require('winston');
 
-const Cookie = `tracking_id=955fc5c286344abf8b69526d7bf6b1d0; browserid=8b4f7eac60bff5c10715c149ff32d94d; __utmz=147100981.1560079024.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _gcl_au=1.1.1222511145.1560079024; cto_lwid=d3a8769e-51d0-4e5c-991b-86e0f6b7d5f9; _ga=GA1.2.2042790980.1560079024; _fbp=fb.1.1560079025407.1101395990; s_c_id_type=fosp; login_type=fosp; _ga=GA1.3.2042790980.1560079024; __stdf=0; mp_7ee9ac5438d5ed68c57319eb6bf3821f_mixpanel=%7B%22distinct_id%22%3A%20%2216b55dd3ec9249-010a5d62d5b0df-3f72045a-100200-16b55dd3eca529%22%2C%22%24device_id%22%3A%20%2216b55dd3ec9249-010a5d62d5b0df-3f72045a-100200-16b55dd3eca529%22%2C%22%24initial_referrer%22%3A%20%22https%3A%2F%2Fwww.sendo.vn%2Fnoi-dien-mini-sieu-toc-16cm-9780102.html%2F%22%2C%22%24initial_referring_domain%22%3A%20%22www.sendo.vn%22%7D; access_token=L9rjjfA%2BO8r%2FB2tKKPeUqCGIkJvQ2MLeAX6X9IU%2Bh7%2FQMraMXO0OTDI6q5KQuiQpMtRil3VLiLQ5YQ7hNIiaXx1KNF28cOuwoqcZMzHHuL8vjqCwejE4AqRy7wRvi3fSc8ZXOaEJ3ELzwhICbDWxtD8ECFa2%2FYu747hLzntseTc%3D; s_c_id_status=return; __stp={"visit":"returning","uuid":"4182cbe5-7b56-4f08-80e7-791e9b2c99a3","ck":"2028040157"}; SSID=3dpk3q2lh9aa3fvvd47gofcn94; __utma=147100981.2042790980.1560079024.1560771597.1560868721.7; __utmc=147100981; _gid=GA1.2.497193889.1560868722; closed_banner=1; __utmt=1; _dc_gtm_UA-32891946-6=1; _gat_UA-32891946-6=1; __utmb=147100981.10.7.1560869352932; _gid=GA1.3.497193889.1560868722; __sts={"sid":1560869354601,"tx":1560869354601,"url":"https%3A%2F%2Fcheckout.sendo.vn%2F%3Fproduct%3Df7d297e36834ca67203d25304afd4adf%26sendo_platform%3Ddesktop2%26shop%3D499867","pet":1560869354601,"set":1560869354601}; __stgeo="0"; __stbpnenable=1`;
+const Cookie = `_ga=GA1.3.2042790980.1560079024; tracking_id=ebd11a163ea64e1188bef9aa3bc207ab; browserid=c46e2274ef7a7216cb08b17489d920cf; __utmz=147100981.1561043320.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _gcl_au=1.1.1892877907.1561043320; _ga=GA1.2.335305423.1561043320; cto_lwid=c5b3511f-0648-4104-8915-fb0b41312585; _fbp=fb.1.1561043320525.1132653891; login_type=fosp; s_c_id_type=fosp; SSID=c8ppmin9r8gbjrofkpuslig9q5; __utma=147100981.335305423.1561043320.1561255118.1561476626.13; __utmc=147100981; __utmt=1; _gid=GA1.2.1461826516.1561476627; _dc_gtm_UA-32891946-6=1; WZRK_G=1206267572da46b08942116ec71a1f7f; access_token=kG3ZQ9Flw0K3o5aV%2BQjTWQov89MTETFgIu08xg5TOSnenrGvdoO9kxlnRBLuqA9Eu7gWaguJ%2BzEXFfsZVipt3S0%2FS9maQ3MTsnSkuyTkflwUNVH3cMRlfr1s1uuJ53cHR%2FMcw5fb0li6QPkig57ZD9Sc6g1tJ2yt9w9vWTe6asQ%3D; s_c_id_status=return; _gat_UA-32891946-6=1; __utmb=147100981.12.7.1561476654648; _gid=GA1.3.1461826516.1561476627; __stp={"visit":"returning","uuid":"98267a5b-7164-45e9-a279-b5df3f0dfa40","ck":"2027412012"}; __sts={"sid":1561476656201,"tx":1561476656201,"url":"https%3A%2F%2Fcheckout.sendo.vn%2F%3Fproduct%3D6451cc91c7c7b5bb42235916e6e64de7%26sendo_platform%3Ddesktop2%26shop%3D346887","pet":1561476656201,"set":1561476656201}; __stdf=0; WZRK_S_466-944-R55Z=%7B%22p%22%3A7%2C%22s%22%3A1561476627%2C%22t%22%3A1561476656%7D; __stgeo="0"; __stbpnenable=1`;
 
 
 /*** config winston **/
@@ -75,7 +75,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 				buy(res.data);
 			}
 		}).catch((error) => {
-			// logger.error(`${url} failed with reason: ${error.message}`);
+			logger.error(`${url} failed with reason: ${error.message}`);
 		});
 	}
 
@@ -133,7 +133,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 			}
 			logger.info(`Hunter Failure: ` + new Date().toUTCString());
 		}).catch((error) => {
-			// logger.error(`${url} failed with reason: ${error.message}`);
+			logger.error(`${url} failed with reason: ${error.message}`);
 		});
 	}
 
@@ -146,14 +146,15 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 				rejectUnauthorized: false
 			};
 			const req = https.request(url, options, (response) => {
-				let data = '';
+				let data = [];
 				response.on('data', (chunk) => {
-					data += chunk;
+					data.push(chunk);
 				});
 				response.on('end', () => {
 					// logger.info(`${url}: ${response.statusCode}`);
 					if (response.statusCode === 200) {
-						data = JSON.parse(data);
+						data = Buffer.concat(data);
+						data = JSON.parse(data.toString());
 						return resolve(data);
 					}
 					return reject(null);
@@ -168,4 +169,4 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 	}
 }
 
-saleHunter('e57ba6143a3ba1df589f9e84c30613c4', 580180, new Date(2019, 5, 22, 16, 51).getTime());
+saleHunter('', , new Date(2019, 5, 23, 9, 14).getTime());
