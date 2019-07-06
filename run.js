@@ -8,7 +8,7 @@ const https = require("https");
 const nodeSchedule = require('node-schedule');
 const winston = require('winston');
 
-const Cookie = `_ga=GA1.3.2042790980.1560079024; tracking_id=ebd11a163ea64e1188bef9aa3bc207ab; browserid=c46e2274ef7a7216cb08b17489d920cf; __utmz=147100981.1561043320.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _gcl_au=1.1.1892877907.1561043320; _ga=GA1.2.335305423.1561043320; cto_lwid=c5b3511f-0648-4104-8915-fb0b41312585; _fbp=fb.1.1561043320525.1132653891; login_type=fosp; s_c_id_type=fosp; SSID=c8ppmin9r8gbjrofkpuslig9q5; __utma=147100981.335305423.1561043320.1561255118.1561476626.13; __utmc=147100981; __utmt=1; _gid=GA1.2.1461826516.1561476627; _dc_gtm_UA-32891946-6=1; WZRK_G=1206267572da46b08942116ec71a1f7f; access_token=kG3ZQ9Flw0K3o5aV%2BQjTWQov89MTETFgIu08xg5TOSnenrGvdoO9kxlnRBLuqA9Eu7gWaguJ%2BzEXFfsZVipt3S0%2FS9maQ3MTsnSkuyTkflwUNVH3cMRlfr1s1uuJ53cHR%2FMcw5fb0li6QPkig57ZD9Sc6g1tJ2yt9w9vWTe6asQ%3D; s_c_id_status=return; _gat_UA-32891946-6=1; __utmb=147100981.12.7.1561476654648; _gid=GA1.3.1461826516.1561476627; __stp={"visit":"returning","uuid":"98267a5b-7164-45e9-a279-b5df3f0dfa40","ck":"2027412012"}; __sts={"sid":1561476656201,"tx":1561476656201,"url":"https%3A%2F%2Fcheckout.sendo.vn%2F%3Fproduct%3D6451cc91c7c7b5bb42235916e6e64de7%26sendo_platform%3Ddesktop2%26shop%3D346887","pet":1561476656201,"set":1561476656201}; __stdf=0; WZRK_S_466-944-R55Z=%7B%22p%22%3A7%2C%22s%22%3A1561476627%2C%22t%22%3A1561476656%7D; __stgeo="0"; __stbpnenable=1`;
+const Cookie = `tracking_id=b547f022526f4c9b8ccd5d30460be4b5; browserid=13c5ba3cd292e742f05bef43c813045c; _gcl_au=1.1.1070992975.1559353125; __utma=147100981.241459878.1559353126.1562335453.1562411395.8; __utmz=147100981.1559353126.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); _ga=GA1.2.241459878.1559353126; cto_lwid=95d1ca53-e661-4c42-98fd-f6d02d099ada; _fbp=fb.1.1559353126136.706245720; cto_idcpy=f455952b-d1b6-4b67-a71b-a7c365959d8f; login_type=fosp; _ga=GA1.3.241459878.1559353126; __stp={"visit":"returning","uuid":"78e0fa2f-cac9-4f8d-bdfe-380820081781","ck":"2028846286"}; s_c_id_status=return; WZRK_G=d1366a76a74a4d2491a031f90c195cfd; s_c_id_type=fosp; _gid=GA1.2.1111655810.1562335458; access_token=OHWvAipghrjCCbvdygrbN4Ra3Y9Ob6dA6K6DiO4xDvKLJBKsJMXLw8vbz4%2Bk9W1k2AIzqwy03qcbWaQ7pnDeSplwV6X5YI24jRWKpqdAKha5xzrYQtfZkPJHcAs%2BUqjstc%2FbF6JgJFG7crFtzXg3%2B0iPkGDkedWj2nRP4yBn%2F2o%3D; SSID=gr4nchtdkpujgqv6efoaeqk224; __utmb=147100981.9.8.1562411417530; __utmc=147100981; __utmt=1; WZRK_S_466-944-R55Z=%7B%22p%22%3A5%2C%22s%22%3A1562411395%2C%22t%22%3A1562411431%7D; closed_banner=1; _gat_UA-32891946-6=1; _gid=GA1.3.1111655810.1562335458; __sts={"sid":1562411419621,"tx":1562411419621,"url":"https%3A%2F%2Fcheckout.sendo.vn%2F%3Fproduct%3Dd0499cc4cda29ace4cb14a270ccab5c4%26sendo_platform%3Ddesktop2%26shop%3D414094","pet":1562411419621,"set":1562411419621}; __stdf=0; __stgeo="0"; __stbpnenable=1`;
 
 
 /*** config winston **/
@@ -52,7 +52,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 					} else {
 						clearInterval(mainInterval);
 					}
-				}, 33);
+				}, 37);
 			}
 		}, 50);
 	});
@@ -75,7 +75,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 				buy(res.data);
 			}
 		}).catch((error) => {
-			logger.error(`${url} failed with reason: ${error.message}`);
+			// logger.error(`${url} failed with reason: ${error.message}`);
 		});
 	}
 
@@ -133,7 +133,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 			}
 			logger.info(`Hunter Failure: ` + new Date().toUTCString());
 		}).catch((error) => {
-			logger.error(`${url} failed with reason: ${error.message}`);
+			// logger.error(`${url} failed with reason: ${error.message}`);
 		});
 	}
 
@@ -169,4 +169,4 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 	}
 }
 
-saleHunter('', , new Date(2019, 5, 23, 9, 14).getTime());
+saleHunter('d0499cc4cda29ace4cb14a270ccab5c4',414094 , new Date(2019, 6, 6, 12).getTime());
