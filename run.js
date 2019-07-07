@@ -14,7 +14,8 @@ const Cookie = `tracking_id=b547f022526f4c9b8ccd5d30460be4b5; browserid=13c5ba3c
 /*** config winston **/
 const logger = winston.createLogger({
 	transports: [
-		new winston.transports.File({ filename: 'saleLog.txt'})
+		// new winston.transports.File({ filename: 'saleLog.txt'})
+		new winston.transports.Console()
 	]
 });
 /*** config winston **/
@@ -26,7 +27,7 @@ const headers = {
 
 
 function saleHunter(current_product_hash, currentShopId, plan) {
-	console.log('start', new Date().getMinutes(),  Date().getHours());
+	console.log('start', new Date().getMinutes(),  new Date().getHours());
 	const TOTAL_REQUEST = 20;
 	let current_number_request = 0;
 	let is_bought_success = false;
@@ -54,7 +55,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 					} else {
 						clearInterval(mainInterval);
 					}
-				}, 37);
+				}, 55);
 			}
 		}, 50);
 	});
@@ -77,7 +78,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 				buy(res.data);
 			}
 		}).catch((error) => {
-			// logger.error(`${url} failed with reason: ${error.message}`);
+			logger.error(`${url} failed with reason: ${error.message}`);
 		});
 	}
 
@@ -135,7 +136,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 			}
 			logger.info(`Hunter Failure: ` + new Date().toUTCString());
 		}).catch((error) => {
-			// logger.error(`${url} failed with reason: ${error.message}`);
+			logger.error(`${url} failed with reason: ${error.message}`);
 		});
 	}
 
@@ -153,7 +154,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 					data.push(chunk);
 				});
 				response.on('end', () => {
-					// logger.info(`${url}: ${response.statusCode}`);
+					logger.info(`${url}: ${response.statusCode}`);
 					if (response.statusCode === 200) {
 						data = Buffer.concat(data);
 						data = JSON.parse(data.toString());
@@ -171,4 +172,4 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 	}
 }
 
-saleHunter('e3a9c57d7d3493165e25ecb88e518160',392011 , new Date(2019, 6, 7, 11, 37).getTime());
+saleHunter('e3a9c57d7d3493165e25ecb88e518160',392011 , new Date(2019, 6, 7, 11, 48).getTime());
