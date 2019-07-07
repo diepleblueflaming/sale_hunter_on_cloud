@@ -26,6 +26,7 @@ const headers = {
 
 
 function saleHunter(current_product_hash, currentShopId, plan) {
+	console.log('start', new Date().getMinutes(),  Date().getHours());
 	const TOTAL_REQUEST = 20;
 	let current_number_request = 0;
 	let is_bought_success = false;
@@ -39,6 +40,7 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 			const now = new Date().getTime();
 			if ((plan - now) < relativeTime) {
 				clearInterval(myInterval);
+				console.log('start', new Date().getHours());
 				logger.info(`*******************************************`);
 				logger.info(`Start hunter: ` + new Date().toUTCString());
 				mainInterval = setInterval(function () {
@@ -169,4 +171,4 @@ function saleHunter(current_product_hash, currentShopId, plan) {
 	}
 }
 
-saleHunter('e3a9c57d7d3493165e25ecb88e518160',392011 , new Date(2019, 6, 7, 11, 28).getTime());
+saleHunter('e3a9c57d7d3493165e25ecb88e518160',392011 , new Date(2019, 6, 7, 11, 37).getTime());
